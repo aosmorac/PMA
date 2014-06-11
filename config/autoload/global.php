@@ -14,7 +14,7 @@
 return array(
     'db' => array(
         'driver' => 'Pdo',
-        'dsn'            => 'mysql:dbname=test;host=10.48.78.21',
+        'dsn'            => 'mysql:dbname=pmacolombia_dev;host=10.48.78.21',
         'username'       => 'app',
         'password'       => 'Theg7d8',
         'driver_options' => array(
