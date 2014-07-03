@@ -15,6 +15,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Db\TableGateway\Feature;
 
 use User\Model\UserTable;
+use Zend\Authentication\AuthenticationService;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -60,9 +61,9 @@ class Module implements AutoloaderProviderInterface
         $moduleRouteListener->attach($eventManager);
         
         // set static adapter for all module table gateways
-		$serviceManager = $e->getApplication()->getServiceManager();
-		$dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
-		Feature\GlobalAdapterFeature::setStaticAdapter($dbAdapter);
+        $serviceManager = $e->getApplication()->getServiceManager();
+        $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
+        Feature\GlobalAdapterFeature::setStaticAdapter($dbAdapter);
 		
     }
 }

@@ -17,6 +17,7 @@ use User\Form\LoginForm;
 use Zend\View\Model\ViewModel;
 use User\Model\Tables\UserTable;
 use User\Model\User;
+use Util\UserSession;
 
 /**********************************************************
  * CONTROLADOR AuthController
@@ -34,27 +35,28 @@ use User\Model\User;
 class AuthController extends AbstractActionController
 {
     
-    /*
+    /**
      * index
      * 
      */
     public function indexAction()
-    {
+    {   
         return array();
     }
     
-    /*
+    /**
      * login
      * 
      * Muestra el formulario de ingreso
      */
     public function loginAction()
     {
+        $this->layout('layout/login');
         $form = new LoginForm();
         return array('form' => $form);
     }
     
-    /*
+    /**
      * enter
      * 
      * Toma los datos ingresados en el formulario login
@@ -66,12 +68,28 @@ class AuthController extends AbstractActionController
         if ($request->isPost()) {
             $user = new User();
             if ($user->login(trim($request->getPost('username')), trim($request->getPost('password')))){
-                echo 'ok';
+                $this->redirect()->toUrl('index');
                 //Debug::dump($user->getActiveUser());
+                return '';
             }
         }
+        $this->redirect()->toUrl('login');
         return $this->response; //Desabilita View y Layout
     }
+    
+    
+    /**
+     * logout
+     *
+     * Muestra el formulario de ingreso
+     */
+    public function logoutAction()
+    {
+        $user = new User();
+        $user->logout();
+    	$this->redirect()->toUrl('login');
+    }
+    
 
     
 }

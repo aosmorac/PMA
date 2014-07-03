@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 11-06-2014 a las 17:35:22
+-- Tiempo de generación: 27-06-2014 a las 13:48:51
 -- Versión del servidor: 5.6.19
 -- Versión de PHP: 5.3.28
 
@@ -59,6 +59,231 @@ BEGIN
   END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_ceilings`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_ceilings` (
+  `BUS_CEI_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DEL TECHO',
+  `LUD_COD_DIVIPOLA` int(11) NOT NULL COMMENT 'IDENTIFICADOR DEL DEPARTAMENTO',
+  `BUS_CEI_NAME` varchar(20) DEFAULT NULL COMMENT 'NOMBRE DEL TECHO',
+  `BUS_CEI_DESCRIPTION` varchar(100) DEFAULT NULL,
+  `LUT_COD_STATUS` int(11) DEFAULT NULL COMMENT 'IDENTIFICADOR DEL ESTADO',
+  PRIMARY KEY (`BUS_CEI_ID`),
+  KEY `FK_LUD_COD_DIVIPOLA` (`LUD_COD_DIVIPOLA`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_commodities`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_commodities` (
+  `BUS_COM_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DEL PRODUCTO',
+  `BUS_COM_NAME` varchar(20) DEFAULT NULL COMMENT 'NOMBRE DEL PRODUCTO',
+  `BUS_COM_DESCRIPTION` text CHARACTER SET latin1 COMMENT 'DESCRIPCION DEL PRODUCTO',
+  `BUS_COM_IMAGE` varchar(100) DEFAULT NULL COMMENT 'URL DE LA IMAGEN (NO ABSOLUTA)',
+  `LUT_COD_COM_TYPE` int(11) DEFAULT NULL COMMENT 'TIPO DE PRODUCTO',
+  PRIMARY KEY (`BUS_COM_ID`),
+  KEY `FK_LUT_COD_COM_TYPE` (`LUT_COD_COM_TYPE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_commodity_attribute`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_commodity_attribute` (
+  `BUS_COM_ATT_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DEL ATRIBUTO DEL PRODUCTO',
+  `BUS_COM_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DEL PRODUCTO',
+  `BUS_COM_ATT_PRICE` int(11) DEFAULT NULL COMMENT 'PRECIO DEL PRODUCTO POR UNIDAD',
+  `BUS_COM_ATT_WEIGHT` int(11) DEFAULT NULL COMMENT 'PESO O VALOR DE LA UNIDAD (2 KG, 1 T, 10 MTS)',
+  `BUS_COM_ATT_QUANTITY` int(11) DEFAULT NULL COMMENT 'CANTIDAD DE UNIDADES',
+  `LUT_COD_STATUS` int(11) NOT NULL COMMENT 'IDENTIFICADOR DEL ESTADO',
+  `LUT_COD_CURRENCY` int(11) DEFAULT NULL COMMENT 'IDENTIFICADOR DEL TIPO DE MONEDA',
+  `LUT_COD_UNIT` int(11) DEFAULT NULL COMMENT 'IDENTIFICADOR DE LA UNIDAD',
+  PRIMARY KEY (`BUS_COM_ATT_ID`),
+  KEY `FK_BUS_COM_ID` (`BUS_COM_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_com_by_kit`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_com_by_kit` (
+  `BUS_COM_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DEL PRODUCTO',
+  `BUSS_KIT_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DEL KIT',
+  PRIMARY KEY (`BUS_COM_ID`,`BUSS_KIT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_framework`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_framework` (
+  `BUS_FRA_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DEL PROYECTO',
+  `BUS_FRA_ABBREVIATION` varchar(20) NOT NULL COMMENT 'ABREVIATURA ASIGNADA AL PROYECTO',
+  `BUS_FRA_NAME` varchar(250) NOT NULL COMMENT 'NOMBRE ASIGNADO AL PROYECTO',
+  `BUS_FRA_DESCRIPTION` varchar(250) DEFAULT NULL COMMENT 'DESCRIPCION DEL PROYECTO',
+  `BUS_FRA_DATE_INIT` date NOT NULL COMMENT 'FECHA DE INICIO DEL PROYECTO',
+  `BUS_FRA_DATE_END` date NOT NULL COMMENT 'FECHA DE FINALIZACION DEL PROYECTO',
+  PRIMARY KEY (`BUS_FRA_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA QUE ALMACENA LA INFORMACION DE LOS PROYECTOS QUE SE TRABAJAN EN PMA' AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `buss_framework`
+--
+
+INSERT INTO `buss_framework` (`BUS_FRA_ID`, `BUS_FRA_ABBREVIATION`, `BUS_FRA_NAME`, `BUS_FRA_DESCRIPTION`, `BUS_FRA_DATE_INIT`, `BUS_FRA_DATE_END`) VALUES
+(1, 'OPSR-200148', 'Operación Prolongada de Socorro y Recuperación 200148', 'Operación Prolongada de Socorro y Recuperación 200148', '2012-01-01', '2014-12-31');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_frm_by_mod`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_frm_by_mod` (
+  `BUS_MOD_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DE MODALIDAD',
+  `BUS_FRA_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DE FRAMEWORK',
+  KEY `FK_BUS_MOD_ID` (`BUS_MOD_ID`),
+  KEY `FK_BUS_FRA_ID` (`BUS_FRA_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_kits`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_kits` (
+  `BUS_KIT_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DEL KIT',
+  `BUS_KIT_NAME` varchar(20) DEFAULT NULL COMMENT 'NOMBRE DEL KIT',
+  `BUS_KIT_DESCRIPTION` varchar(100) DEFAULT NULL COMMENT 'DESCRIPCION DEL KIT',
+  `BUS_KIT_ABBREVIATION` varchar(10) DEFAULT NULL COMMENT 'NOMBRE QUE IDENTIFICA AL KIT',
+  `LUT_COD_STATUS` int(11) DEFAULT NULL COMMENT 'IDENTIFICADOR DEL ESTADO',
+  `BUS_KIT_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'FECHA DE CREACION DEL KIT',
+  PRIMARY KEY (`BUS_KIT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_kit_by_mod`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_kit_by_mod` (
+  `BUSS_KIT_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DEL KIT',
+  `BUSS_MOD_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DE LA MODALIDAD',
+  KEY `FK_BUSS_KIT_ID` (`BUSS_KIT_ID`),
+  KEY `FK_BUSS_MOD_ID` (`BUSS_MOD_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_kit_by_sea`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_kit_by_sea` (
+  `BUSS_KIT_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR DEL KIT',
+  `BUSS_SEA_ID` int(11) NOT NULL COMMENT 'IDENTIFICADO DE LA CAMPAÑA',
+  PRIMARY KEY (`BUSS_KIT_ID`,`BUSS_SEA_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_modalities`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_modalities` (
+  `BUS_MOD_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DE LA MODALIDAD',
+  `BUS_MOD_ABBREVIATION` varchar(20) NOT NULL COMMENT 'ABREVIATURA UNICA ASIGNADA A LA MODALIDAD',
+  `BUS_MOD_NAME` varchar(250) NOT NULL COMMENT 'NOMBRE DE LA MODALIDAD',
+  `BUS_MOD_DESCRIPTION` varchar(250) DEFAULT NULL COMMENT 'DESCRIPCION DE LA MODALIDAD',
+  `BUS_MOD_MIN_DELIVERIES` int(11) NOT NULL COMMENT 'MINIMA CANTIDAD DE ENTREGAS QUE SE REALIZAN POR LA MODALIDAD',
+  `BUS_MOD_MAX_DELIVERIES` int(11) NOT NULL COMMENT 'MAXIMA CANTIDAD DE ENTREGAS QUE SE REALIZAN POR LA MODALIDAD',
+  `BUS_MOD_TIMEFRAME` int(11) NOT NULL COMMENT 'PERIODICIDAD DE ENTREGA, POR EJEMPLO CADA 30 DIAS',
+  `LUT_COD_TIMEFRAME_UNIT` int(11) NOT NULL COMMENT 'UNIDAD PARA LA PERIODICIDAD DE LA ENTREGA, POR EJEMPLO: DIAS, MESES, AÑOS',
+  `LUT_COD_STATUS` int(11) NOT NULL COMMENT 'ESTADO DE LA MODALIDAD, POR EJEMPLO: ACTIVO, INACTIVO.',
+  `LUT_COD_MOD_TYPE` int(11) NOT NULL COMMENT 'TIPO DE MODALIDAD, POR EJEMPLO: ALIMENTOS, NO ALIMENTOS',
+  PRIMARY KEY (`BUS_MOD_ID`,`BUS_MOD_ABBREVIATION`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='MODALIDADES DISPONIBLES PARA SER IMPLEMENTADAS EN LAS DIFERENTES OPERACIONES' AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `buss_modalities`
+--
+
+INSERT INTO `buss_modalities` (`BUS_MOD_ID`, `BUS_MOD_ABBREVIATION`, `BUS_MOD_NAME`, `BUS_MOD_DESCRIPTION`, `BUS_MOD_MIN_DELIVERIES`, `BUS_MOD_MAX_DELIVERIES`, `BUS_MOD_TIMEFRAME`, `LUT_COD_TIMEFRAME_UNIT`, `LUT_COD_STATUS`, `LUT_COD_MOD_TYPE`) VALUES
+(1, 'SOC', 'Distribución General de Alimentos- Socorro', 'Distribución General de Alimentos- Socorro', 1, 3, 40, 1982, 1986, 1989),
+(2, 'ESC', 'Alimentación Escolar', 'Alimentación Escolar', 1, 7, 30, 1982, 1986, 1989),
+(3, 'MGL', 'Alimentación Complementaria (Madres Gestantes y en periodo de Lactancia)', 'Alimentación Complementaria (Madres Gestantes y en periodo de Lactancia)', 1, 9, 30, 1982, 1986, 1989),
+(4, 'RN', 'Alimentación Complementaria (Niños 2-5 años)', 'Alimentación Complementaria (Niños 2-5 años)', 1, 9, 30, 1982, 1986, 1989);
+
+--
+-- Disparadores `buss_modalities`
+--
+DROP TRIGGER IF EXISTS `TR_BI_BUSS_MODALITIES`;
+DELIMITER //
+CREATE TRIGGER `TR_BI_BUSS_MODALITIES` BEFORE INSERT ON `buss_modalities`
+ FOR EACH ROW BEGIN
+  IF (NEW.LUT_COD_TIMEFRAME_UNIT IS NOT NULL)
+  THEN
+    IF (NOT F_Check_Codes(
+              'TIMEFRAME_UNIT'
+             ,NEW.LUT_COD_TIMEFRAME_UNIT))
+    THEN
+      CALL raise_error( 'Problemas con el código de TIMEFRAME_UNIT en la tabla lut_codes');
+    END IF;
+  END IF;
+  IF (NEW.LUT_COD_STATUS IS NOT NULL)
+  THEN
+    IF (NOT F_Check_Codes(
+              'STATUS'
+             ,NEW.LUT_COD_STATUS))
+    THEN
+      CALL raise_error( 'Problemas con el código de STATUS en la tabla lut_codes');
+    END IF;
+  END IF;
+  IF (NEW.LUT_COD_MOD_TYPE IS NOT NULL)
+  THEN
+    IF (NOT F_Check_Codes(
+              'MOD_TYPE'
+             ,NEW.LUT_COD_MOD_TYPE))
+    THEN
+      CALL raise_error( 'Problemas con el código de MOD_TYPE en la tabla lut_codes');
+    END IF;
+  END IF;
+END
+//
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `buss_season`
+--
+
+CREATE TABLE IF NOT EXISTS `buss_season` (
+  `BUS_SEA_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DE LA CAMPAÑA',
+  `BUS_SEA_NAME` varchar(20) DEFAULT NULL COMMENT 'NOMBRE DE LA CAMPAÑA',
+  `BUS_SEA_DESCRIPTION` varchar(100) DEFAULT NULL COMMENT 'DESCRIPCION DE LA CAMPAÑA',
+  `BUS_SEA_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'FECHA DE CREACION',
+  `BUS_SEA_START_DATE` date DEFAULT NULL COMMENT 'FECHA DE INICIO DE LA CAMPAÑA',
+  `BUS_SEA_END_DATE` date DEFAULT NULL COMMENT 'FECHA DE TERMINACION DE LA CAMPAÑA',
+  `LUT_COD_STATUS` int(11) DEFAULT NULL COMMENT 'IDENTIFICADOR DEL ESTADO',
+  PRIMARY KEY (`BUS_SEA_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -119,9 +344,9 @@ INSERT INTO `core_dpto_by_ofc` (`LUT_COD_OFFICES`, `LUT_COD_DIVIPOLA`) VALUES
 --
 -- Disparadores `core_dpto_by_ofc`
 --
-DROP TRIGGER IF EXISTS `TR_BI_CORE_dpto_by_ofc`;
+DROP TRIGGER IF EXISTS `TR_BI_CORE_DPTO_BY_OFC`;
 DELIMITER //
-CREATE TRIGGER `TR_BI_CORE_dpto_by_ofc` BEFORE INSERT ON `core_dpto_by_ofc`
+CREATE TRIGGER `TR_BI_CORE_DPTO_BY_OFC` BEFORE INSERT ON `core_dpto_by_ofc`
  FOR EACH ROW BEGIN
   IF (NEW.LUT_COD_OFFICES IS NOT NULL)
   THEN
@@ -158,38 +383,43 @@ CREATE TABLE IF NOT EXISTS `core_modules` (
   `COR_MOD_DESCRIPTION` varchar(250) DEFAULT NULL COMMENT 'DESCRIPCION DEL MODULO QUE SERA UTILIZADA COMO TOOL TIP EN LA ACCION MOUSE OVER',
   `COR_MOD_URL` varchar(500) NOT NULL COMMENT 'URL DE ACCESO AL MODULO',
   `COR_MOD_ICON` varchar(200) DEFAULT NULL COMMENT 'UBICACION ICONO ASOCIADO AL MODULO',
+  `LUT_COD_STATUS` int(11) NOT NULL,
   PRIMARY KEY (`COR_MOD_ID`),
-  KEY `SR_CORE_MODULES` (`COR_MOD_PID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA DE ADMINISTRACIÓN DE MODULOS DE APLICACION' AUTO_INCREMENT=2 ;
+  KEY `SR_CORE_MODULES` (`COR_MOD_PID`),
+  KEY `FK_LUT_COD_STATUS` (`LUT_COD_STATUS`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA DE ADMINISTRACIÓN DE MODULOS DE APLICACION' AUTO_INCREMENT=8 ;
 
 --
 -- Volcado de datos para la tabla `core_modules`
 --
 
-INSERT INTO `core_modules` (`COR_MOD_ID`, `COR_MOD_PID`, `COR_MOD_NAME`, `COR_MOD_DESCRIPTION`, `COR_MOD_URL`, `COR_MOD_ICON`) VALUES
-(1, NULL, 'Administración', 'Módulo Administrativo del Sistema de Información de la Operación', '', '');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `core_modules_by_role`
---
-
-CREATE TABLE IF NOT EXISTS `core_modules_by_role` (
-  `COR_MBR_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DE LOS MODULOS POR ROL',
-  `COR_MOD_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR UNICO DEL MODULO',
-  `COR_ROL_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR UNICO DEL ROL',
-  PRIMARY KEY (`COR_MBR_ID`),
-  KEY `fk_core_modules_by_role_01` (`COR_MOD_ID`),
-  KEY `fk_core_modules_by_role_02` (`COR_ROL_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA QUE IDENTIFICA LOS MODULOS A LOS QUE TIENE ACCESO UN ROL DEFINIDO' AUTO_INCREMENT=2 ;
+INSERT INTO `core_modules` (`COR_MOD_ID`, `COR_MOD_PID`, `COR_MOD_NAME`, `COR_MOD_DESCRIPTION`, `COR_MOD_URL`, `COR_MOD_ICON`, `LUT_COD_STATUS`) VALUES
+(1, NULL, 'Menú', 'Menú de menús', '', '', 1986),
+(2, 1, 'Administración', 'Módulo Administrativo del Sistema de Información de la Operación', '', '', 1986),
+(3, 2, 'Usuarios', 'Módulo de administración de usuarios', '/admin/user/list', '', 1986),
+(4, 2, 'Módulos', 'Módulo de administración de módulos.', '/admin/modules/list', '', 1986),
+(5, 1, 'Kits', 'Módulo kits.', '', '', 1986),
+(7, 2, 'Roles', 'Módulo de administración de roles.', '/admin/roles/list', '', 1986);
 
 --
--- Volcado de datos para la tabla `core_modules_by_role`
+-- Disparadores `core_modules`
 --
-
-INSERT INTO `core_modules_by_role` (`COR_MBR_ID`, `COR_MOD_ID`, `COR_ROL_ID`) VALUES
-(1, 1, 1);
+DROP TRIGGER IF EXISTS `TR_BI_CORE_MODULES`;
+DELIMITER //
+CREATE TRIGGER `TR_BI_CORE_MODULES` BEFORE INSERT ON `core_modules`
+ FOR EACH ROW BEGIN
+  IF (NEW.LUT_COD_STATUS IS NOT NULL)
+  THEN
+    IF (NOT F_Check_Codes(
+              'STATUS'
+             ,NEW.LUT_COD_STATUS))
+    THEN
+      CALL raise_error( 'Problemas con el código de STATUS en la tabla lut_codes');
+    END IF;
+  END IF;
+END
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -198,12 +428,99 @@ INSERT INTO `core_modules_by_role` (`COR_MBR_ID`, `COR_MOD_ID`, `COR_ROL_ID`) VA
 --
 
 CREATE TABLE IF NOT EXISTS `core_mod_by_rol_priv` (
-  `COR_MBR_ID` int(11) NOT NULL COMMENT 'IDENTIFICADOR UNICO DE MODULOS POR ROL',
-  `LUT_COD_PRIVILEGE` int(11) NOT NULL COMMENT 'IDENTIFICADOR UNICO DE CODIGOS DE PRIVILEGIOS',
-  `COR_MRP_VALUE` int(1) NOT NULL DEFAULT '0' COMMENT 'VALOR BOOLEANO QUE IDENTIFICA SI TIENE O NO PRIVILEGIOS CONCEDIDOS',
-  PRIMARY KEY (`COR_MBR_ID`),
-  KEY `FK_core_mod_by_rol_priv_01` (`LUT_COD_PRIVILEGE`)
+  `COR_MOD_ID` int(11) NOT NULL,
+  `COR_ROL_ID` int(11) NOT NULL,
+  `LUT_COD_PRIVILEGE` int(11) DEFAULT NULL COMMENT 'IDENTIFICADOR UNICO DE CODIGOS DE PRIVILEGIOS',
+  `COR_MRP_VALUE` int(1) DEFAULT '0' COMMENT 'VALOR BOOLEANO QUE IDENTIFICA SI TIENE O NO PRIVILEGIOS CONCEDIDOS',
+  KEY `FK_core_mod_by_rol_priv_01` (`LUT_COD_PRIVILEGE`),
+  KEY `FK_COR_MOD_ID` (`COR_MOD_ID`),
+  KEY `FK_COR_ROL_ID` (`COR_ROL_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='TABLA DE PRIVILEGIOS A LOS MODULOS PARA CADA ROL';
+
+--
+-- Volcado de datos para la tabla `core_mod_by_rol_priv`
+--
+
+INSERT INTO `core_mod_by_rol_priv` (`COR_MOD_ID`, `COR_ROL_ID`, `LUT_COD_PRIVILEGE`, `COR_MRP_VALUE`) VALUES
+(5, 2, 11, 1),
+(2, 4, 11, 1),
+(3, 4, 11, 1),
+(4, 4, 11, 1),
+(7, 4, 11, 1),
+(5, 4, 11, 1),
+(2, 1, 11, 1),
+(3, 1, 11, 1),
+(4, 1, 11, 1),
+(7, 1, 11, 1),
+(5, 1, 11, 1),
+(2, 1, 1978, 1),
+(3, 1, 1978, 1),
+(4, 1, 1978, 1),
+(7, 1, 1978, 1),
+(5, 1, 1978, 1),
+(2, 1, 1979, 1),
+(3, 1, 1979, 1),
+(4, 1, 1979, 1),
+(7, 1, 1979, 1),
+(5, 1, 1979, 1),
+(2, 1, 1980, 1),
+(3, 1, 1980, 1),
+(4, 1, 1980, 1),
+(7, 1, 1980, 1),
+(5, 1, 1980, 1);
+
+--
+-- Disparadores `core_mod_by_rol_priv`
+--
+DROP TRIGGER IF EXISTS `TR_BI_CORE_MOD_BY_ROL_PRIV`;
+DELIMITER //
+CREATE TRIGGER `TR_BI_CORE_MOD_BY_ROL_PRIV` BEFORE INSERT ON `core_mod_by_rol_priv`
+ FOR EACH ROW BEGIN
+  IF (NEW.LUT_COD_PRIVILEGE IS NOT NULL)
+  THEN
+    IF (NOT F_Check_Codes(
+              'PRIVILEGES'
+             ,NEW.LUT_COD_PRIVILEGE))
+    THEN
+      CALL raise_error( 'Problemas con el código de PRIVILEGES en la tabla lut_codes');
+    END IF;
+  END IF;
+END
+//
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `core_ofc_by_usr`
+--
+
+CREATE TABLE IF NOT EXISTS `core_ofc_by_usr` (
+  `COR_USR_ID` int(11) NOT NULL DEFAULT '0' COMMENT 'IDENTIFICADOR UNICO DEL USUARIO',
+  `LUT_COD_OFFICES` int(11) NOT NULL DEFAULT '0' COMMENT 'IDENTIFICADOR UNICO DE OFICINA(S) A LAS QUE SE RELACIONA EL USUARIO',
+  PRIMARY KEY (`COR_USR_ID`,`LUT_COD_OFFICES`),
+  KEY `FK_CORE_OFC_BY_USR_02` (`LUT_COD_OFFICES`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='TABLA QUE ESTABLECE LA RELACION DE LOS USUARIOS CON LAS SUBOFICINAS PARA DETERMINAR LA INFORMACION A LA QUE TENDRAN ACCESO';
+
+--
+-- Disparadores `core_ofc_by_usr`
+--
+DROP TRIGGER IF EXISTS `TR_BI_CORE_OFC_BY_USR`;
+DELIMITER //
+CREATE TRIGGER `TR_BI_CORE_OFC_BY_USR` BEFORE INSERT ON `core_ofc_by_usr`
+ FOR EACH ROW BEGIN
+  IF (NEW.LUT_COD_OFFICES IS NOT NULL)
+  THEN
+    IF (NOT F_Check_Codes(
+              'OFFICES'
+             ,NEW.LUT_COD_OFFICES))
+    THEN
+      CALL raise_error( 'Problemas con el código de OFFICES en la tabla lut_codes');
+    END IF;
+  END IF;
+END
+//
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -215,15 +532,18 @@ CREATE TABLE IF NOT EXISTS `core_roles` (
   `COR_ROL_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'IDENTIFICADOR UNICO DEL ROL',
   `COR_ROL_NAME` varchar(250) NOT NULL COMMENT 'NOMBRE DEL ROL',
   `COR_ROL_DESCRIPTION` varchar(250) DEFAULT NULL COMMENT 'DESCRIPCION DEL ROL',
+  `LUT_COD_STATUS` int(11) NOT NULL,
   PRIMARY KEY (`COR_ROL_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA DE ALMACENAMIENTO DE ROLES' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA DE ALMACENAMIENTO DE ROLES' AUTO_INCREMENT=5 ;
 
 --
 -- Volcado de datos para la tabla `core_roles`
 --
 
-INSERT INTO `core_roles` (`COR_ROL_ID`, `COR_ROL_NAME`, `COR_ROL_DESCRIPTION`) VALUES
-(1, 'Administrador', 'Administrador del Sistema de Información de la Operación');
+INSERT INTO `core_roles` (`COR_ROL_ID`, `COR_ROL_NAME`, `COR_ROL_DESCRIPTION`, `LUT_COD_STATUS`) VALUES
+(1, 'Administrador', 'Administrador del Sistema de Información de la Operación', 1986),
+(2, 'Test', 'Pruebas', 1986),
+(4, 'Socios implementadores.', 'Socios implementadores. ', 1986);
 
 -- --------------------------------------------------------
 
@@ -237,6 +557,15 @@ CREATE TABLE IF NOT EXISTS `core_roles_by_user` (
   PRIMARY KEY (`COR_USR_ID`,`COR_ROL_ID`),
   KEY `FK_CORE_ROLES_BY_USER_01` (`COR_ROL_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='TABLA DE ALMACENAMIENTO DE LA RELACION ENTRE USUARIOS Y ROLES';
+
+--
+-- Volcado de datos para la tabla `core_roles_by_user`
+--
+
+INSERT INTO `core_roles_by_user` (`COR_ROL_ID`, `COR_USR_ID`) VALUES
+(1, 1),
+(1, 6),
+(2, 2);
 
 -- --------------------------------------------------------
 
@@ -331,7 +660,7 @@ CREATE TABLE IF NOT EXISTS `lut_codes` (
   `LUT_COD_TYPE` varchar(20) DEFAULT NULL COMMENT 'TIPO DE CODIGO',
   PRIMARY KEY (`LUT_COD_ID`),
   KEY `SR_LUT_CODES` (`LUT_COD_PID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA DE CODIFICACION' AUTO_INCREMENT=1978 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='TABLA DE CODIFICACION' AUTO_INCREMENT=1994 ;
 
 --
 -- Volcado de datos para la tabla `lut_codes`
@@ -339,14 +668,14 @@ CREATE TABLE IF NOT EXISTS `lut_codes` (
 
 INSERT INTO `lut_codes` (`LUT_COD_ID`, `LUT_COD_PID`, `LUT_COD_NAME`, `LUT_COD_PNAME`, `LUT_COD_DESCRIPTION`, `LUT_COD_ABBREVIATION`, `LUT_COD_OTHER1`, `LUT_COD_OTHER2`, `LUT_COD_OTHER3`, `LUT_COD_TYPE`) VALUES
 (0, NULL, 'CODIGOS', NULL, NULL, 'CODIGOS', NULL, NULL, NULL, 'CODIGOS'),
-(3, 0, 'Distribución política', '', '', 'DIVIPOLA', 'DIVIPOLA', '', '', 'DIVIPOLA'),
-(4, 0, 'Estados de usuario', '', '', 'USERSTATUS', '', '', '', 'USERSTATUS'),
+(3, 0, 'Distribución política', '', 'Distribución política del mundo', 'DIVIPOLA', 'DIVIPOLA', '', '', 'DIVIPOLA'),
+(4, 0, 'Estados de usuario', '', 'Estados de los usuarios', 'USERSTATUS', '', '', '', 'USERSTATUS'),
 (5, 4, 'Activo', 'Estados de usuario', '', 'ACTIVE', '', '', '', 'USERSTATUS'),
-(6, 0, 'Organización', '', '', 'ORGANIZATION', '', '', '', 'ORGANIZATION'),
-(7, 0, 'Cargo', '', '', 'POSITION', '', '', '', 'POSITION'),
+(6, 0, 'Organización', '', 'Empresas o compañías que se requieren mostrar en listas desplegables', 'ORGANIZATION', '', '', '', 'ORGANIZATION'),
+(7, 0, 'Cargo', '', 'Cargos disponibles para listas desplegables que lo requieran', 'POSITION', '', '', '', 'POSITION'),
 (8, 6, 'PMA Colombia', 'Organización', '', 'PMACOLOMBIA', '', '', '', 'ORGANIZATION'),
 (9, 7, 'Gerente', 'Cargo', '', 'MANAGER', '', '', '', 'POSITION'),
-(10, 0, 'Privilegios', NULL, NULL, 'PRIVILEGES', NULL, NULL, NULL, 'PRIVILEGES'),
+(10, 0, 'Privilegios', NULL, 'Privilegios de los usuarios de la aplicación', 'PRIVILEGES', NULL, NULL, NULL, 'PRIVILEGES'),
 (11, 10, 'Solo Lectura', NULL, NULL, 'READONLY', NULL, NULL, NULL, 'PRIVILEGES'),
 (12, 3, 'Colombia', 'Distribución Política', NULL, 'COL', '57', NULL, NULL, 'DIVIPOLA'),
 (13, 12, 'Amazonas', 'Colombia', 'Departamento', 'COL_AMA', '91', '57', '', 'DIVIPOLA'),
@@ -899,10 +1228,10 @@ INSERT INTO `lut_codes` (`LUT_COD_ID`, `LUT_COD_PID`, `LUT_COD_NAME`, `LUT_COD_P
 (998, 27, 'San Bernardo Del Viento', 'Córdoba', 'Municipio', 'CÓR_BER', '23675', '23', '', 'DIVIPOLA'),
 (1001, 27, 'San Carlos', 'Córdoba', 'Municipio', 'CÓR_CAR', '23678', '23', '', 'DIVIPOLA'),
 (1004, 27, 'San Jose De Ure', 'Córdoba', 'Municipio', 'CÓR_JOS', '23682', '23', '', 'DIVIPOLA'),
-(1007, 27, 'San Pelayo', 'Córdoba', 'Municipio', 'CÓR_SAN', '23686', '23', '', 'DIVIPOLA'),
-(1010, 28, 'Chia', 'Cundinamarca', 'Municipio', 'CUN_CHI', '25175', '25', '', 'DIVIPOLA'),
-(1011, 28, 'Chipaque', 'Cundinamarca', 'Municipio', 'CUN_CHP', '25178', '25', '', 'DIVIPOLA');
+(1007, 27, 'San Pelayo', 'Córdoba', 'Municipio', 'CÓR_SAN', '23686', '23', '', 'DIVIPOLA');
 INSERT INTO `lut_codes` (`LUT_COD_ID`, `LUT_COD_PID`, `LUT_COD_NAME`, `LUT_COD_PNAME`, `LUT_COD_DESCRIPTION`, `LUT_COD_ABBREVIATION`, `LUT_COD_OTHER1`, `LUT_COD_OTHER2`, `LUT_COD_OTHER3`, `LUT_COD_TYPE`) VALUES
+(1010, 28, 'Chia', 'Cundinamarca', 'Municipio', 'CUN_CHI', '25175', '25', '', 'DIVIPOLA'),
+(1011, 28, 'Chipaque', 'Cundinamarca', 'Municipio', 'CUN_CHP', '25178', '25', '', 'DIVIPOLA'),
 (1012, 28, 'Choachi', 'Cundinamarca', 'Municipio', 'CUN_CHC', '25181', '25', '', 'DIVIPOLA'),
 (1013, 28, 'Choconta', 'Cundinamarca', 'Municipio', 'CUN_CHO', '25183', '25', '', 'DIVIPOLA'),
 (1014, 28, 'El Colegio', 'Cundinamarca', 'Municipio', 'CUN_ELC', '25245', '25', '', 'DIVIPOLA'),
@@ -1448,10 +1777,10 @@ INSERT INTO `lut_codes` (`LUT_COD_ID`, `LUT_COD_PID`, `LUT_COD_NAME`, `LUT_COD_P
 (1922, 43, 'La Union', 'Valle Del Cauca', 'Municipio', 'VAL_UNI', '76400', '76', '', 'DIVIPOLA'),
 (1923, 43, 'La Victoria', 'Valle Del Cauca', 'Municipio', 'VAL_VIC', '76403', '76', '', 'DIVIPOLA'),
 (1924, 43, 'Alcala', 'Valle Del Cauca', 'Municipio', 'VAL_ALC', '76020', '76', '', 'DIVIPOLA'),
-(1925, 43, 'Andalucia', 'Valle Del Cauca', 'Municipio', 'VAL_AND', '76036', '76', '', 'DIVIPOLA'),
-(1926, 43, 'Ansermanuevo', 'Valle Del Cauca', 'Municipio', 'VAL_ANS', '76041', '76', '', 'DIVIPOLA'),
-(1927, 43, 'Argelia', 'Valle Del Cauca', 'Municipio', 'VAL_ARG', '76054', '76', '', 'DIVIPOLA');
+(1925, 43, 'Andalucia', 'Valle Del Cauca', 'Municipio', 'VAL_AND', '76036', '76', '', 'DIVIPOLA');
 INSERT INTO `lut_codes` (`LUT_COD_ID`, `LUT_COD_PID`, `LUT_COD_NAME`, `LUT_COD_PNAME`, `LUT_COD_DESCRIPTION`, `LUT_COD_ABBREVIATION`, `LUT_COD_OTHER1`, `LUT_COD_OTHER2`, `LUT_COD_OTHER3`, `LUT_COD_TYPE`) VALUES
+(1926, 43, 'Ansermanuevo', 'Valle Del Cauca', 'Municipio', 'VAL_ANS', '76041', '76', '', 'DIVIPOLA'),
+(1927, 43, 'Argelia', 'Valle Del Cauca', 'Municipio', 'VAL_ARG', '76054', '76', '', 'DIVIPOLA'),
 (1928, 43, 'Bolivar', 'Valle Del Cauca', 'Municipio', 'VAL_BOL', '76100', '76', '', 'DIVIPOLA'),
 (1929, 43, 'Buenaventura', 'Valle Del Cauca', 'Municipio', 'VAL_BUE', '76109', '76', '', 'DIVIPOLA'),
 (1930, 43, 'Caicedonia', 'Valle Del Cauca', 'Municipio', 'VAL_CAI', '76122', '76', '', 'DIVIPOLA'),
@@ -1501,11 +1830,59 @@ INSERT INTO `lut_codes` (`LUT_COD_ID`, `LUT_COD_PID`, `LUT_COD_NAME`, `LUT_COD_P
 (1974, 7, 'Oficial de Políticas Públicas', 'Cargo', NULL, 'PP_OFFICER', NULL, NULL, NULL, 'POSITION'),
 (1975, 7, 'Oficial de Programas', 'Cargo', NULL, 'PROGRAMME_OFC', NULL, NULL, NULL, 'POSITION'),
 (1976, 7, 'Auxiliar SIO', 'Cargo', NULL, 'AUX_SIO', NULL, NULL, NULL, 'POSITION'),
-(1977, 7, 'ICT', 'Cargo', NULL, 'ICT', NULL, NULL, NULL, 'POSITION');
+(1977, 7, 'ICT', 'Cargo', NULL, 'ICT', NULL, NULL, NULL, 'POSITION'),
+(1978, 10, 'Agregar', 'Privilegios', 'Permisos para agregar', 'ADD', '', '', '', 'PRIVILEGES'),
+(1979, 10, 'Editar', 'Privilegios', 'Permisos de edición', 'EDIT', '', '', '', 'PRIVILEGES'),
+(1980, 10, 'Eliminar', 'Privilegios', 'Permisos de eliminación', 'DELETE', '', '', '', 'PRIVILEGES'),
+(1981, 0, 'Unidades de medida de tiempo', '', 'Códigos de las unidades de Medida de tiempo', 'TIMEFRAME_UNIT', NULL, NULL, NULL, 'TIMEFRAME_UNIT'),
+(1982, 1981, 'Días', 'Unidades de medida de tiempo', 'Días', 'DAYS', NULL, NULL, NULL, 'TIMEFRAME_UNIT'),
+(1983, 1981, 'Meses', 'Unidades de medida de tiempo', 'Meses', 'MONTHS', NULL, NULL, NULL, 'TIMEFRAME_UNIT'),
+(1984, 1981, 'Años', 'Unidades de medida de tiempo', 'Años', 'YEARS', NULL, NULL, NULL, 'TIMEFRAME_UNIT'),
+(1985, 0, 'Estado de actividad/inactividad', '', 'Estado de actividad/inactividad', 'STATUS', NULL, NULL, NULL, 'STATUS'),
+(1986, 1985, 'Activo', 'Estado de actividad/inactividad', 'Activo', 'ACTIVE', NULL, NULL, NULL, 'STATUS'),
+(1987, 1985, 'Inactivo', 'Estado de actividad/inactividad', 'Inactivo', 'INACTIVE', NULL, NULL, NULL, 'STATUS'),
+(1988, 0, 'Tipo de Modalidad', NULL, 'Tipo de modalidad', 'MOD_TYPE', NULL, NULL, NULL, 'MOD_TYPE'),
+(1989, 1988, 'Alimentaria', 'Tipo de Modalidad', 'Modalidad Alimentaria', 'FOOD', NULL, NULL, NULL, 'MOD_TYPE'),
+(1990, 1988, 'No Alimentaria', 'Tipo de Modalidad', 'Modalidad no Alimentaria', 'NON_FOOD', NULL, NULL, NULL, 'MOD_TYPE'),
+(1991, 0, 'Tipo de elemento', '', 'Tipo de elemento', 'COM_TYPE', '', '', '', 'COM_TYPE'),
+(1992, 1991, 'Alimento', 'Tipo de elemento', 'Elemento tipo alimento', 'FOOD', '', '', '', 'COM_TYPE'),
+(1993, 1991, 'No Alimento', 'Tipo de elemento', 'Elemento tipo no alimento', 'NON_FOOD', '', '', '', 'COM_TYPE');
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `buss_ceilings`
+--
+ALTER TABLE `buss_ceilings`
+  ADD CONSTRAINT `FK_LUD_COD_DIVIPOLA` FOREIGN KEY (`LUD_COD_DIVIPOLA`) REFERENCES `lut_codes` (`LUT_COD_ID`);
+
+--
+-- Filtros para la tabla `buss_commodities`
+--
+ALTER TABLE `buss_commodities`
+  ADD CONSTRAINT `FK_LUT_COD_COM_TYPE` FOREIGN KEY (`LUT_COD_COM_TYPE`) REFERENCES `lut_codes` (`LUT_COD_ID`);
+
+--
+-- Filtros para la tabla `buss_commodity_attribute`
+--
+ALTER TABLE `buss_commodity_attribute`
+  ADD CONSTRAINT `FK_BUS_COM_ID` FOREIGN KEY (`BUS_COM_ID`) REFERENCES `buss_commodities` (`BUS_COM_ID`);
+
+--
+-- Filtros para la tabla `buss_frm_by_mod`
+--
+ALTER TABLE `buss_frm_by_mod`
+  ADD CONSTRAINT `FK_BUS_FRA_ID` FOREIGN KEY (`BUS_FRA_ID`) REFERENCES `buss_framework` (`BUS_FRA_ID`),
+  ADD CONSTRAINT `FK_BUS_MOD_ID` FOREIGN KEY (`BUS_MOD_ID`) REFERENCES `buss_modalities` (`BUS_MOD_ID`);
+
+--
+-- Filtros para la tabla `buss_kit_by_mod`
+--
+ALTER TABLE `buss_kit_by_mod`
+  ADD CONSTRAINT `FK_BUSS_KIT_ID` FOREIGN KEY (`BUSS_KIT_ID`) REFERENCES `buss_kits` (`BUS_KIT_ID`),
+  ADD CONSTRAINT `FK_BUSS_MOD_ID` FOREIGN KEY (`BUSS_MOD_ID`) REFERENCES `buss_modalities` (`BUS_MOD_ID`);
 
 --
 -- Filtros para la tabla `core_contract`
@@ -1524,20 +1901,15 @@ ALTER TABLE `core_dpto_by_ofc`
 -- Filtros para la tabla `core_modules`
 --
 ALTER TABLE `core_modules`
+  ADD CONSTRAINT `FK_LUT_COD_STATUS` FOREIGN KEY (`LUT_COD_STATUS`) REFERENCES `lut_codes` (`LUT_COD_ID`) ON UPDATE CASCADE,
   ADD CONSTRAINT `SR_CORE_MODULES` FOREIGN KEY (`COR_MOD_PID`) REFERENCES `core_modules` (`COR_MOD_ID`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `core_modules_by_role`
+-- Filtros para la tabla `core_ofc_by_usr`
 --
-ALTER TABLE `core_modules_by_role`
-  ADD CONSTRAINT `fk_core_modules_by_role_01` FOREIGN KEY (`COR_MOD_ID`) REFERENCES `core_modules` (`COR_MOD_ID`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_core_modules_by_role_02` FOREIGN KEY (`COR_ROL_ID`) REFERENCES `core_roles` (`COR_ROL_ID`) ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `core_mod_by_rol_priv`
---
-ALTER TABLE `core_mod_by_rol_priv`
-  ADD CONSTRAINT `FK_core_mod_by_rol_priv_01` FOREIGN KEY (`LUT_COD_PRIVILEGE`) REFERENCES `lut_codes` (`LUT_COD_ID`) ON UPDATE CASCADE;
+ALTER TABLE `core_ofc_by_usr`
+  ADD CONSTRAINT `FK_CORE_OFC_BY_USR_01` FOREIGN KEY (`COR_USR_ID`) REFERENCES `core_users` (`COR_USR_ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_CORE_OFC_BY_USR_02` FOREIGN KEY (`LUT_COD_OFFICES`) REFERENCES `lut_codes` (`LUT_COD_ID`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `core_roles_by_user`
